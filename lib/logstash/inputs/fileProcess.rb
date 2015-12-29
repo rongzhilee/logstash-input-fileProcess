@@ -55,7 +55,8 @@ class LogStash::Inputs::FileProcess  < LogStash::Inputs::Base
         line = ""
         begin
           while line = file.gets
-            line = line.force_encoding("ISO-8859-1")
+            #line = line.force_encoding("ISO-8859-1")
+            line = line.gsub(/[^\x20-\x7E,\u4e00-\u9fa5]/, "")#去掉不可见字符，只保留中文
             event = LogStash::Event.new("message" => line) #, "host" => @host
             decorate(event)
             queue << event
